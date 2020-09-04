@@ -1,11 +1,17 @@
 import React from "react";
 
-import Routes from "./routes";
+import {
+  CSSReset,
+  ThemeProvider,
+} from "@chakra-ui/core";
 
-function App() {
-  return (
-    <Routes/>
-  );
-}
+import Routes from "./Routes";
+
+const App = () => (
+  <ThemeProvider>
+    <CSSReset />
+    <Routes />
+  </ThemeProvider>
+);
 
 export default App;
