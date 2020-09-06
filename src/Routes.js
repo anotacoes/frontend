@@ -1,8 +1,15 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
 
-import LoginPage from "./pages/Login";
-import RegisterPage from "./pages/Register";
+import {
+  BrowserRouter,
+  Route,
+  Switch,
+} from "react-router-dom";
+
+import {
+  LoginPage,
+  RegisterPage,
+} from "./pages";
 
 const Routes = () => (
   <BrowserRouter>
