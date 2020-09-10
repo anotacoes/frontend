@@ -3,8 +3,12 @@ import React from "react";
 import {
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
 } from "@chakra-ui/core";
 
 import {
@@ -14,6 +18,9 @@ import {
 export const TextField = ({
   name,
   label,
+  leftElement,
+  rightElement,
+  helperText = "",
   containerProps = {},
   ...props
 }) => {
@@ -21,8 +28,13 @@ export const TextField = ({
 
   return (
     <FormControl isInvalid={errors[name]} {...containerProps}>
-      <FormLabel htmlFor={name}>{label}</FormLabel>
-      <Input type="text" name={name} ref={register} {...props} />
+      {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+      <InputGroup>
+        {leftElement && <InputLeftElement children={leftElement} />}
+        <Input type="text" name={name} ref={register} {...props} bg="dark.700" focusBorderColor="purple.300" />
+        {rightElement && <InputRightElement children={rightElement} />}
+      </InputGroup>
+      {helperText && !errors[name] && <FormHelperText>{helperText}</FormHelperText>}
       <FormErrorMessage>
         {errors[name] && errors[name].message}
       </FormErrorMessage>

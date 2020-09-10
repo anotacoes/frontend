@@ -1,6 +1,9 @@
 import React from "react";
 
-import { Link } from "react-router-dom";
+import {
+  Link,
+  useHistory,
+} from "react-router-dom";
 
 import { useForm } from "react-hook-form";
 
@@ -10,7 +13,6 @@ import * as yup from "yup";
 
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Link as ChakraLink,
@@ -19,6 +21,7 @@ import {
 
 import {
   Form,
+  PrimaryButton,
   TextField,
 } from "../../components";
 
@@ -38,6 +41,8 @@ const registerFormSchema = yup.object().shape({
 });
 
 const RegisterForm = () => {
+  const history = useHistory();
+
   const form = useForm({
     resolver: yupResolver(registerFormSchema),
     defaultValues: {
@@ -60,20 +65,20 @@ const RegisterForm = () => {
 
       <TextField type="password" name="password" label="Senha" containerProps={{ pb: "8" }} />
 
-      <Flex align="center" direction="column">
-        <Button type="submit" isFullWidth h="50px" variantColor="blue" mb="3">Cadastrar</Button>
-        <Text fontSize="sm">
+      <Box>
+        <PrimaryButton type="submit" isFullWidth h="50px" mb="3" onClick={() => history.push("/home")}>Cadastrar</PrimaryButton>
+        <Text fontSize="sm" textAlign="center">
           Já possui uma conta? <ChakraLink href="#" fontWeight="500" as={Link} to="/">Faça o login</ChakraLink>
         </Text>
-      </Flex>
+      </Box>
     </Form>
   );
 };
 
 
 export const RegisterPage = () => (
-  <Flex justify="center" align="center" bg="gray.400" minH="100vh" px="5">
-    <Box p="8" bg="white" borderRadius="5px" width={{ sm: "400px", base: "100%" }}>
+  <Flex justify="center" align="center" bg="dark.900" minH="100vh" p="5">
+    <Box p="8" bg="dark.800" borderRadius="4px" width={{ sm: "400px", base: "100%" }}>
       <RegisterForm />
     </Box>
   </Flex>

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@bit/mui-org.material-ui.grid": "^4.9.10",
     "@chakra-ui/core": "^0.8.0",
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
@@ -12,6 +13,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.7.2",
+    "react-icons": "^3.11.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "styled-components": "^5.1.1",
@@ -21,7 +23,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "preinstall": "npm config set @bit:registry https://node.bit.dev"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -29,6 +32,10 @@
       "quotes": [
         "error",
         "double"
+      ],
+      "semi": [
+        "error",
+        "always"
       ]
     }
   },
