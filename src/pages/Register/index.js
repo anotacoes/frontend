@@ -20,6 +20,7 @@ import {
 } from "@chakra-ui/core";
 
 import {
+  Card,
   Form,
   PrimaryButton,
   TextField,
@@ -57,18 +58,26 @@ const RegisterForm = () => {
     <Form {...form} onSubmit={console.log}>
       <Heading pb="5">Cadastro</Heading>
 
-      <TextField name="name" label="Nome" containerProps={{ pb: "3" }} />
+      <Box pb="3">
+        <TextField name="name" label="Nome" />
+      </Box>
 
-      <TextField type="email" name="email" label="E-mail" containerProps={{ pb: "3" }} />
+      <Box pb="3">
+        <TextField type="email" name="email" label="E-mail" />
+      </Box>
 
-      <TextField name="username" label="Usuário" containerProps={{ pb: "3" }} />
+      <Box pb="3">
+        <TextField name="username" label="Usuário" />
+      </Box>
 
-      <TextField type="password" name="password" label="Senha" containerProps={{ pb: "8" }} />
+      <Box pb="8">
+        <TextField type="password" name="password" label="Senha" />
+      </Box>
 
       <Box>
         <PrimaryButton type="submit" isFullWidth h="50px" mb="3" onClick={() => history.push("/home")}>Cadastrar</PrimaryButton>
         <Text fontSize="sm" textAlign="center">
-          Já possui uma conta? <ChakraLink href="#" fontWeight="500" as={Link} to="/">Faça o login</ChakraLink>
+          Já possui uma conta? <ChakraLink fontWeight="500" as={Link} to="/">Faça o login</ChakraLink>
         </Text>
       </Box>
     </Form>
@@ -78,8 +87,8 @@ const RegisterForm = () => {
 
 export const RegisterPage = () => (
   <Flex justify="center" align="center" bg="dark.900" minH="100vh" p="5">
-    <Box p="8" bg="dark.800" borderRadius="4px" width={{ sm: "400px", base: "100%" }}>
+    <Card p="8" width={{ sm: "400px", base: "100%" }}>
       <RegisterForm />
-    </Box>
+    </Card>
   </Flex>
 );
