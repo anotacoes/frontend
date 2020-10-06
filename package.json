@@ -8,9 +8,12 @@
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
     "@hookform/resolvers": "^0.1.0",
+    "axios": "^0.20.0",
+    "axios-hooks": "^2.1.0",
     "emotion-theming": "^10.0.27",
     "ramda": "^0.27.1",
     "react": "^16.13.1",
+    "react-datepicker": "^3.2.2",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.7.2",
     "react-icons": "^3.11.0",
@@ -37,7 +40,8 @@
       "semi": [
         "error",
         "always"
-      ]
+      ],
+      "no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }]
     }
   },
   "browserslist": {

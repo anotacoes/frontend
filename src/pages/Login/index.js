@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import {
   Link,
   useHistory,
 } from "react-router-dom";
+
+import useAxios from "axios-hooks";
 
 import { useForm } from "react-hook-form";
 
@@ -19,6 +21,8 @@ import {
   Text,
 } from "@chakra-ui/core";
 
+import { prop } from "ramda";
+
 import {
   Card,
   Form,
@@ -26,40 +30,64 @@ import {
   TextField,
 } from "../../components";
 
+import { useCurrentUser } from "../../model/auth";
+
 const loginFormSchema = yup.object().shape({
-  username: yup.string()
+  login: yup.string()
     .max(20, "Usuário deve conter até 20 caracteres")
     .required("Informe o usuário"),
-  password: yup.string()
+  senha: yup.string()
     .max(20, "Senha deve conter até 20 caracteres")
     .required("Informe a senha"),
 });
 
 const LoginForm = () => {
   const history = useHistory();
+  const [_, setCurrentUser] = useCurrentUser();
 
   const form = useForm({
     resolver: yupResolver(loginFormSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      login: "",
+      senha: "",
     },
   });
 
+  const { setError } = form;
+
+  const [{ loading }, login] = useAxios(
+    { url: "/contas/login", method: "POST" },
+    { manual: true },
+  );
+
+  const onLogin = useCallback(data =>
+    login({ data })
+      .then(prop("data"))
+      .then(setCurrentUser)
+      .then(() => history.replace("/home"))
+      .catch(({ response }) => {
+        if (prop("status", response) === 404) {
+          setError("login", { message: "Usuário incorreto" });
+        } else {
+          setError("senha", { message: "Senha incorreta" });
+        }
+      })
+  , [login, setCurrentUser, history, setError]);
+
   return (
-    <Form {...form} onSubmit={console.log}>
+    <Form {...form} onSubmit={onLogin}>
       <Heading pb="5">Login</Heading>
 
       <Box pb="3">
-        <TextField name="username" label="Usuário" />
+        <TextField name="login" label="Usuário" />
       </Box>
 
       <Box pb="8">
-        <TextField type="password" name="password" label="Senha" />
+        <TextField type="password" name="senha" label="Senha" />
       </Box>
 
       <Box>
-        <PrimaryButton type="submit" isFullWidth h="50px" mb="3" onClick={() => history.push("/home")}>Entrar</PrimaryButton>
+        <PrimaryButton type="submit" isFullWidth h="50px" mb="3" isLoading={loading}>Entrar</PrimaryButton>
         <Text fontSize="sm" textAlign="center">
           Ainda não possui uma conta? <ChakraLink fontWeight="500" as={Link} to="/register">Cadastre-se</ChakraLink>
         </Text>

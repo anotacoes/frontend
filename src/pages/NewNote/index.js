@@ -31,6 +31,7 @@ import * as yup from "yup";
 import {
   Card,
   CreatableSelectField,
+  DateField,
   Form,
   Menu,
   MenuDivider,
@@ -38,7 +39,7 @@ import {
   PrimaryButton,
   TextareaField,
   TextField,
-} from "../../components";
+} from "../../components";;
 
 const pseudoButtonStyles = { bg: "dark.700" };
 
@@ -55,6 +56,7 @@ const registerFormSchema = yup.object().shape({
   name: yup.string()
     .max(60, "Nome deve conter até 60 caracteres")
     .required("Informe o nome completo"),
+  date: yup.date(),
 });
 
 export const NewNotePage = () => {
@@ -62,6 +64,7 @@ export const NewNotePage = () => {
     resolver: yupResolver(registerFormSchema),
     defaultValues: {
       name: "",
+      date: new Date(),
     },
   });
 
@@ -104,7 +107,9 @@ export const NewNotePage = () => {
                 <Divider py="1" />
 
                 <Stack pt="2" pb="2" spacing={3}>
-                  <TextareaField name="name" label="Digite um texto" />
+                  <Box>
+                    <TextareaField name="name" label="Digite um texto" />
+                  </Box>
 
                   <Box pt="1">
                     <Grid container>
@@ -114,9 +119,13 @@ export const NewNotePage = () => {
                             <CreatableSelectField name="name" label="Evento" />
                           </Box>
 
-                          <TextField name="name" label="Data inicial" />
+                          <Box>
+                            <DateField name="date" label="Data inicial" />
+                          </Box>
 
-                          <TextField name="name" label="Data final" />
+                          <Box>
+                            <DateField name="name" label="Data final" />
+                          </Box>
                         </Stack>
                       </Grid>
 
@@ -126,9 +135,13 @@ export const NewNotePage = () => {
                             <CreatableSelectField name="name" label="Palestra" />
                           </Box>
 
-                          <TextField name="name" label="Data" />
+                          <Box>
+                            <TextField name="name" label="Data" />
+                          </Box>
 
-                          <TextField name="name" label="Palestrante" />
+                          <Box>
+                            <TextField name="name" label="Palestrante" />
+                          </Box>
                         </Stack>
                       </Grid>
                     </Grid>
