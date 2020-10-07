@@ -5,7 +5,10 @@ import {
   useHistory,
 } from "react-router-dom";
 
-import { prop } from "ramda";
+import {
+  identity,
+  propOr,
+} from "ramda";
 
 import { useForm } from "react-hook-form";
 
@@ -24,6 +27,7 @@ import {
 } from "@chakra-ui/core";
 
 import {
+  BaseFormError,
   Card,
   Form,
   PrimaryButton,
@@ -31,6 +35,8 @@ import {
 } from "../../components";
 
 import { useCurrentUser } from "../../model";
+
+import { setFormErrorsFromResponse } from "../../utils";
 
 const registerFormSchema = yup.object().shape({
   nome: yup.string()
@@ -47,10 +53,7 @@ const registerFormSchema = yup.object().shape({
     .required("Informe a senha"),
 });
 
-const RegisterForm = () => {
-  const [_, setCurrentUser] = useCurrentUser();
-  const history = useHistory();
-
+const useRegisterForm = ({ onSuccess = identity, onError = identity }) => {
   const form = useForm({
     resolver: yupResolver(registerFormSchema),
     defaultValues: {
@@ -61,30 +64,42 @@ const RegisterForm = () => {
     },
   });
 
-  const { setError } = form;
-
-  const [{ loading }, register] = useAxios(
+  const [{ loading: submitting }, register] = useAxios(
     { url: "/contas", method: "POST" },
     { manual: true },
   );
 
-  const onRegister = useCallback(data =>
-    register({ data })
-      .then(prop("data"))
-      .then(setCurrentUser)
-      .then(() => history.replace("/home"))
-      .catch(({ response }) => {
-        if (prop("status", response) === 404) {
-          setError("login", { message: "Usuário incorreto" });
-        } else {
-          setError("senha", { message: "Senha incorreta" });
-        }
-      })
-  , [register, setCurrentUser, history, setError]);
+  const onSubmit = useCallback(async (data) => {
+    try {
+      const response = await register({ data });
+      onSuccess(response);
+    } catch (err) {
+      const response = propOr({}, "response", err);
+      setFormErrorsFromResponse({ response, form });
+      onError(response);
+    }
+  }, [register, onSuccess, onError, form]);
 
+  return {
+    ...form,
+    onSubmit,
+    submitting,
+  };
+};
+
+const RegisterForm = () => {
+  const { setCurrentUser } = useCurrentUser();
+  const history = useHistory();
+
+  const onRegisterSuccess = useCallback(({ data }) => {
+    setCurrentUser(data);
+    history.replace("/home");
+  }, [history, setCurrentUser]);
+
+  const form = useRegisterForm({ onSuccess: onRegisterSuccess });
 
   return (
-    <Form {...form} onSubmit={onRegister}>
+    <Form {...form}>
       <Heading pb="5">Cadastro</Heading>
 
       <Box pb="3">
@@ -99,12 +114,14 @@ const RegisterForm = () => {
         <TextField name="login" label="Usuário" />
       </Box>
 
-      <Box pb="8">
+      <Box pb="4">
         <TextField type="password" name="senha" label="Senha" />
       </Box>
 
-      <Box>
-        <PrimaryButton type="submit" isFullWidth h="50px" mb="3" isLoading={loading}>Cadastrar</PrimaryButton>
+      <BaseFormError pb="4" />
+
+      <Box pt="4">
+        <PrimaryButton type="submit" isFullWidth h="50px" mb="3" isLoading={form.submitting}>Cadastrar</PrimaryButton>
         <Text fontSize="sm" textAlign="center">
           Já possui uma conta? <ChakraLink fontWeight="500" as={Link} to="/">Faça o login</ChakraLink>
         </Text>

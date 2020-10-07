@@ -1,3 +1,4 @@
+export * from "./BaseFormError";
 export * from "./Card";
 export * from "./CreatableSelectField";
 export * from "./CommentCard";

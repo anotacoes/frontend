@@ -22,7 +22,7 @@ import {
 } from "./model";
 
 const AuthenticatedRoute = ({ component: Component, ...props }) => {
-  const [currentUser] = useCurrentUser();
+  const { currentUser } = useCurrentUser();
 
   return (
     <Route
@@ -33,7 +33,7 @@ const AuthenticatedRoute = ({ component: Component, ...props }) => {
 };
 
 const PublicRoute = ({ component: Component, ...props }) => {
-  const [currentUser] = useCurrentUser();
+  const { currentUser } = useCurrentUser();
 
   return (
     <Route

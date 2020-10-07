@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
+import React, { createContext, useState, useEffect, useContext, useCallback, useMemo } from "react";
 
 import { useHistory } from "react-router-dom";
 
@@ -22,7 +22,9 @@ export const AuthProvider = props => {
     // eslint-disable-next-line
   }, []);
 
-  return <AuthContext.Provider value={[currentUser, setCurrentUser]} {...props} />;
+  const contextValue = useMemo(() => ({ currentUser, setCurrentUser }), [currentUser, setCurrentUser]);
+
+  return <AuthContext.Provider value={contextValue} {...props} />;
 };
 
 export const useCurrentUser = () => useContext(AuthContext);
