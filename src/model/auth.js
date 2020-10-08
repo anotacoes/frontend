@@ -17,7 +17,7 @@ export const AuthProvider = props => {
     const user = JSON.parse(localStorage.getItem("@anotacoes/conta"));
     if (user) {
       setCurrentUser(user);
-      history.replace("/home");
+      history.replace("/app");
     }
     // eslint-disable-next-line
   }, []);

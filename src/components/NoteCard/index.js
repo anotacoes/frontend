@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import {
   Box,
@@ -33,8 +33,11 @@ import { yupResolver } from "@hookform/resolvers";
 import * as yup from "yup";
 
 import {
+  pathOr,
+} from "ramda";
+
+import {
   Card,
-  CommentCard,
   Form,
   PrimaryIconButton,
   TextField,
@@ -58,21 +61,9 @@ export const CommentsModal = () => {
         <ModalCloseButton />
         <ModalBody overflowY="scroll">
           <Stack spacing={3}>
-            <Box>
-              <CommentCard />
-            </Box>
-
-            <Box>
-              <CommentCard />
-            </Box>
-
-            <Box>
-              <CommentCard />
-            </Box>
-
-            <Box>
-              <CommentCard />
-            </Box>
+            <Flex align="center">
+              <Text as="span" fontSize="sm" color="dark.300" fontWeight="500">Nenhum comentário encontrado =(</Text>
+            </Flex>
           </Stack>
         </ModalBody>
 
@@ -81,11 +72,11 @@ export const CommentsModal = () => {
             <Form {...commentForm} onSubmit={console.log}>
               <Grid container spacing={1}>
                 <Grid item xs={10}>
-                  <TextField name="text" placeholder="Comentar..." />
+                  <TextField name="text" placeholder="Comentar..." disabled />
                 </Grid>
 
                 <Grid item xs={2}>
-                  <PrimaryIconButton type="submit" icon={FaArrowRight} w="100%" />
+                  <PrimaryIconButton type="submit" icon={FaArrowRight} w="100%" disabled />
                 </Grid>
               </Grid>
             </Form>
@@ -96,44 +87,37 @@ export const CommentsModal = () => {
   );
 };
 
-const NoteCardHeader = () => (
-  <Flex justify="space-between">
-    <Flex>
-      <Text as="span" fontSize="sm" fontWeight="500">Conceitos do NodeJS</Text>
-      <Text as="span" fontSize="sm" color="dark.300" verticalAlign="middle" mx="1">•</Text>
-      <Text as="span" fontSize="sm" color="dark.300" fontWeight="500">Next-Level Week</Text>
-      <Text as="span" fontSize="sm" color="dark.300" verticalAlign="middle" mx="1">•</Text>
-      <Text as="span" fontSize="sm" color="dark.300" fontWeight="500">Escrito por Vinicius Meneses</Text>
-    </Flex>
-
-    <Flex>
-      <Text as="span" fontSize="sm" fontWeight="500">08/09/2020</Text>
-    </Flex>
+const NoteHeader = ({ conta, palestra, evento }) => (
+  <Flex>
+    <Text as="span" fontSize="sm" fontWeight="500">{palestra.nome}</Text>
+    <Text as="span" fontSize="sm" color="dark.300" verticalAlign="middle" mx="1">•</Text>
+    <Text as="span" fontSize="sm" color="dark.300" fontWeight="500">{evento.nome}</Text>
+    <Text as="span" fontSize="sm" color="dark.300" verticalAlign="middle" mx="1">•</Text>
+    <Text as="span" fontSize="sm" color="dark.300" fontWeight="500">Escrito por {conta.nome}</Text>
   </Flex>
 );
 
-export const NoteCard = () => {
+export const NoteCard = ({ texto, ...props }) => {
   const commentsModal = useDisclosure();
+
+  const evento = useMemo(() => pathOr({}, ["palestra", "evento"], props), [props]);
 
   return (
     <Card>
-      <NoteCardHeader />
+      <NoteHeader {...props} evento={evento}  />
       <Divider />
-      <Text>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque et euismod neque. Duis id urna at massa tempor malesuada. Nunc et bibendum ligula. Phasellus non iaculis nisi, congue cursus lacus. Curabitur facilisis porta sapien quis hendrerit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam feugiat augue id lorem posuere, vel efficitur sapien volutpat. Suspendisse ultrices, est non pretium placerat, dolor dui ornare nisi, non eleifend quam eros ac lacus.
-        Fusce eget porta magna, at luctus ex. Vivamus nec nibh tempor, porta odio ac, finibus leo. Sed laoreet at velit eget pulvinar. In hac habitasse platea dictumst. Ut tempor leo ipsum, id convallis mi bibendum a. Sed ornare imperdiet tellus id porta. Sed fringilla ipsum nec aliquam euismod. Nullam vulputate lorem vel massa elementum efficitur. Donec vel dolor et massa euismod consectetur quis a massa. Donec feugiat elit at tortor fermentum ultrices. Vestibulum auctor dui eget porttitor ultricies. Praesent dapibus risus ac sem rhoncus placerat. Nunc vitae nibh neque. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin rhoncus feugiat nibh ac suscipit. Proin venenatis nunc ligula, a hendrerit odio congue quis.
-      </Text>
+      <Text>{texto}</Text>
       <Flex pt="3">
-        <Button size="xs" variant="outline" variantColor="purple" leftIcon={FaChevronUp} mr="2">
-          28 Upvotes
+        <Button size="xs" variant="outline" variantColor="purple" leftIcon={FaChevronUp} mr="2" disabled>
+          0 Upvotes
         </Button>
 
-        <Button size="xs" variant="outline" variantColor="purple" leftIcon={FaChevronDown} mr="2">
-          3 Downvotes
+        <Button size="xs" variant="outline" variantColor="purple" leftIcon={FaChevronDown} mr="2" disabled>
+          0 Downvotes
         </Button>
 
         <Button size="xs" variant="outline" variantColor="purple" leftIcon={FaRegComment} onClick={commentsModal.onOpen}>
-          5 Comentários
+          0 Comentários
         </Button>
 
         <Modal isCentered {...commentsModal} p="3" size="xl">

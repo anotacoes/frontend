@@ -8,11 +8,8 @@ import {
 } from "react-router-dom";
 
 import {
-  CommentsPage,
-  HomePage,
+  LayoutPage,
   LoginPage,
-  NewNotePage,
-  NotesPage,
   RegisterPage,
 } from "./pages";
 
@@ -38,7 +35,7 @@ const PublicRoute = ({ component: Component, ...props }) => {
   return (
     <Route
       {...props}
-      render={({ location }) => currentUser ? <Redirect to={{ pathname: "/home", state: { from: location } }} /> : <Component {...props} />}
+      render={({ location }) => currentUser ? <Redirect to={{ pathname: "/app", state: { from: location } }} /> : <Component {...props} />}
     />
   );
 };
@@ -49,11 +46,7 @@ const Routes = () => (
       <AuthProvider>
         <PublicRoute path="/" exact component={LoginPage} />
         <PublicRoute path="/register" component={RegisterPage} />
-
-        <AuthenticatedRoute path="/home" component={HomePage} />
-        <AuthenticatedRoute path="/notes" exact component={NotesPage} />
-        <AuthenticatedRoute path="/notes/new" component={NewNotePage} />
-        <AuthenticatedRoute path="/comments" component={CommentsPage} />
+        <AuthenticatedRoute path="/app" component={LayoutPage} />
       </AuthProvider>
     </Switch>
   </BrowserRouter>

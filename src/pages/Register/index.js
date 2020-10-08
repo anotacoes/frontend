@@ -93,7 +93,7 @@ const RegisterForm = () => {
 
   const onRegisterSuccess = useCallback(({ data }) => {
     setCurrentUser(data);
-    history.replace("/home");
+    history.replace("/app");
   }, [history, setCurrentUser]);
 
   const form = useRegisterForm({ onSuccess: onRegisterSuccess });

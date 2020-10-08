@@ -92,7 +92,7 @@ const LoginForm = () => {
 
   const onLoginSuccess = useCallback(({ data }) => {
     setCurrentUser(data);
-    history.replace("/home");
+    history.replace("/app");
   }, [setCurrentUser, history]);
 
   const form = useLoginForm({ onSuccess: onLoginSuccess });
