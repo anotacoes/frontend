@@ -27,7 +27,7 @@ import {
   FaHome,
   FaPencilAlt,
   FaRegCalendarAlt,
-  // FaRegComment,
+  FaRegComment,
   FaSignOutAlt,
 } from "react-icons/fa";
 
@@ -69,10 +69,10 @@ export const LayoutPage = () => {
         <Grid item xs={3}>
           <Stack spacing={4} pt="3">
             <Box>
-              {`${url}/anotacoes/cadastrar` !== pathname && (
+              {`${url}/anotacoes/cadastro` !== pathname && (
                 <>
                   <PseudoBox bg="#7289da" transition="all 0.25s" _hover={newNotesHoverStyles} borderRadius="4px" h="48px">
-                    <ChakraLink as={Link} _hover={newNotesLinkPseudoStyles} _focus={newNotesLinkPseudoStyles} to={`${url}/anotacoes/cadastrar`} >
+                    <ChakraLink as={Link} _hover={newNotesLinkPseudoStyles} _focus={newNotesLinkPseudoStyles} to={`${url}/anotacoes/cadastro`} >
                       <Flex justify="center" alignItems="center" h="100%">
                         <Text as="p" fontSize="lg" fontWeight="600">
                           Nova Anotação
@@ -99,9 +99,9 @@ export const LayoutPage = () => {
               <Menu>
                 <MenuItemLink active={url === pathname} icon={FaHome} as={Link} to={url}>Início</MenuItemLink>
                 <MenuItemLink active={`${url}/anotacoes` === pathname} icon={FaPencilAlt} as={Link} to={`${url}/anotacoes`}>Minhas Anotações</MenuItemLink>
-                {/* <MenuItemLink active={`${url}/comentarios` === pathname} icon={FaRegComment} as={Link} to={`${url}/comentarios`}>Meus Comentários</MenuItemLink> */}
-                <MenuItemLink active={`${url}/eventos` === pathname} icon={FaRegCalendarAlt} as={Link} to={`${url}/eventos`}>Gerenciar Eventos</MenuItemLink>
-                <MenuItemLink active={`${url}/palestras` === pathname} icon={FaBook} as={Link} to={`${url}/palestras`}>Gerenciar Palestras</MenuItemLink>
+                <MenuItemLink active={`${url}/comentarios` === pathname} icon={FaRegComment} as={Link} to={`${url}/comentarios`}>Meus Comentários</MenuItemLink>
+                <MenuItemLink active={`${url}/eventos` === pathname} icon={FaRegCalendarAlt} as={Link} to={`${url}/eventos`} isDisabled>Gerenciar Eventos</MenuItemLink>
+                <MenuItemLink active={`${url}/palestras` === pathname} icon={FaBook} as={Link} to={`${url}/palestras`} isDisabled>Gerenciar Palestras</MenuItemLink>
                 <MenuDivider />
                 <MenuItemLink icon={FaSignOutAlt} onClick={onLogout}>Sair</MenuItemLink>
               </Menu>
@@ -113,7 +113,7 @@ export const LayoutPage = () => {
           <Switch>
             <Route path={path} exact component={HomePage} />
             <Route path={`${path}/anotacoes`} exact component={NotesPage} />
-            <Route path={`${path}/anotacoes/cadastrar`} component={NewNotePage} />
+            <Route path={`${path}/anotacoes/cadastro`} component={NewNotePage} />
             <Route path={`${path}/comentarios`} component={CommentsPage} />
           </Switch>
         </Grid>

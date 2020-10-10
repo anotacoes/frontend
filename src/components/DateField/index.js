@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useMemo } from "react";
 
 import {
   FormControl,
@@ -17,6 +17,8 @@ import {
   useFormContext,
 } from "react-hook-form";
 
+import { pathFromString } from "../../utils";
+
 import "react-datepicker/dist/react-datepicker.css";
 import "./styles.css";
 
@@ -33,14 +35,17 @@ export const DateField = ({
   label,
   helperText = "",
   containerProps = {},
+  isDisabled = false,
   ...props
 }) => {
   const { errors, control } = useFormContext();
 
+  const fieldError = useMemo(() => pathFromString(name, errors), [name, errors]);
+
   return (
-    <FormControl isInvalid={errors[name]} {...containerProps}>
+    <FormControl isInvalid={fieldError} {...containerProps}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
-      <InputGroup>
+      <InputGroup opacity={isDisabled ? "0.4" : "1"}>
         <Controller
           name={name}
           as={({ value, ...props }) => <DatePicker value={value} selected={value} {...props}/>}
@@ -49,12 +54,13 @@ export const DateField = ({
           control={control}
           showPopperArrow={false}
           popperModifiers={popperSettings}
+          disabled={isDisabled}
           {...props}
         />
       </InputGroup>
-      {helperText && !errors[name] && <FormHelperText>{helperText}</FormHelperText>}
+      {helperText && !fieldError && <FormHelperText>{helperText}</FormHelperText>}
       <FormErrorMessage>
-        {errors[name] && errors[name].message}
+        {fieldError && fieldError.message}
       </FormErrorMessage>
     </FormControl>
   );

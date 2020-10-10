@@ -19,6 +19,7 @@ import {
   Link as ChakraLink,
   Heading,
   Text,
+  useToast,
 } from "@chakra-ui/core";
 
 import {
@@ -87,13 +88,19 @@ const useLoginForm = ({ onSuccess = identity, onError = identity }) => {
 };
 
 const LoginForm = () => {
+  const toast = useToast();
   const history = useHistory();
   const { setCurrentUser } = useCurrentUser();
 
   const onLoginSuccess = useCallback(({ data }) => {
     setCurrentUser(data);
     history.replace("/app");
-  }, [setCurrentUser, history]);
+    toast({
+      description: "Login realizado com sucesso!",
+      position: "bottom-left",
+      status: "success",
+    });
+  }, [setCurrentUser, history, toast]);
 
   const form = useLoginForm({ onSuccess: onLoginSuccess });
 

@@ -1,7 +1,13 @@
 import {
+  curry,
   path,
   pathOr,
 } from "ramda";
+
+import {
+  format,
+  parseISO,
+} from "date-fns/fp";
 
 export const setFormErrorsFromResponse = ({ response, form }) => {
   const baseMessage = path(["data", "titulo"], response);
@@ -13,3 +19,7 @@ export const setFormErrorsFromResponse = ({ response, form }) => {
 
   if (fields.length === 0 && baseMessage) form.setError("base", { type: "manual", message: baseMessage });
 };
+
+export const formatDate = date => format("dd/MM/yyyy", date instanceof Date ? date : parseISO(date));
+
+export const pathFromString = curry((str, obj) => path(str.split(/[[\].]/).filter(Boolean), obj));

@@ -24,6 +24,7 @@ import {
   Heading,
   Link as ChakraLink,
   Text,
+  useToast,
 } from "@chakra-ui/core";
 
 import {
@@ -88,13 +89,19 @@ const useRegisterForm = ({ onSuccess = identity, onError = identity }) => {
 };
 
 const RegisterForm = () => {
+  const toast = useToast();
   const { setCurrentUser } = useCurrentUser();
   const history = useHistory();
 
   const onRegisterSuccess = useCallback(({ data }) => {
     setCurrentUser(data);
     history.replace("/app");
-  }, [history, setCurrentUser]);
+    toast({
+      description: "Cadastro realizado com sucesso!",
+      position: "bottom-left",
+      status: "success",
+    });
+  }, [history, setCurrentUser, toast]);
 
   const form = useRegisterForm({ onSuccess: onRegisterSuccess });
 

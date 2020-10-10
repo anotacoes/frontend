@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import {
   FormControl,
@@ -15,6 +15,8 @@ import {
   useFormContext,
 } from "react-hook-form";
 
+import { pathFromString } from "../../utils";
+
 export const TextField = ({
   name,
   label,
@@ -26,17 +28,19 @@ export const TextField = ({
 }) => {
   const { errors, register } = useFormContext();
 
+  const fieldError = useMemo(() => pathFromString(name, errors), [name, errors]);
+
   return (
-    <FormControl isInvalid={errors[name]} {...containerProps}>
+    <FormControl isInvalid={fieldError} {...containerProps}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
       <InputGroup>
         {leftElement && <InputLeftElement children={leftElement} />}
         <Input type="text" name={name} ref={register} {...props} bg="dark.700" focusBorderColor="purple.300" />
         {rightElement && <InputRightElement children={rightElement} />}
       </InputGroup>
-      {helperText && !errors[name] && <FormHelperText>{helperText}</FormHelperText>}
+      {helperText && !fieldError && <FormHelperText>{helperText}</FormHelperText>}
       <FormErrorMessage>
-        {errors[name] && errors[name].message}
+        {fieldError && fieldError.message}
       </FormErrorMessage>
     </FormControl>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import {
   FormControl,
@@ -6,8 +6,6 @@ import {
   FormHelperText,
   FormLabel,
   InputGroup,
-  InputLeftElement,
-  InputRightElement,
 } from "@chakra-ui/core";
 
 
@@ -18,9 +16,13 @@ import {
   useFormContext,
 } from "react-hook-form";
 
+import { pathFromString } from "../../utils";
+
 const noOptionsMessage = () => "Nenhum resultado encontrado";
 
-const createMessage = inputValue => `Cadastrar ${inputValue}...`;
+const loadingMessage = () => "Carregando...";
+
+const createMessage = inputValue => `Criar ${inputValue}...`;
 
 const configureTheme = theme => ({
   ...theme,
@@ -43,9 +45,11 @@ const configureTheme = theme => ({
 });
 
 const styles = {
-  container: defaultStyles => ({ ...defaultStyles, width: "100%"}),
-  control: defaultStyles => ({ ...defaultStyles, height: "40px", transition: "all 0.2s ease"}),
-  valueContainer: defaultStyles => ({ ...defaultStyles, padding: "0 0.95rem"}),
+  container: defaultStyles => ({ ...defaultStyles, width: "100%" }),
+  control: (defaultStyles, { isDisabled }) => ({ ...defaultStyles, height: "40px", transition: "all 0.2s ease", ...isDisabled ? { opacity: isDisabled ? 0.4 : 1, backgroundColor: "#36393e", borderColor: null } : {} }),
+  indicatorSeparator: (defaultStyles, { isDisabled }) => isDisabled ? {...defaultStyles, backgroundColor: "rgba(255,255,255,0.04)" } : defaultStyles,
+  singleValue: (defaultStyles, { isDisabled }) => isDisabled ? {...defaultStyles, color: "rgba(255,255,255,0.92)" } : defaultStyles,
+  valueContainer: defaultStyles => ({ ...defaultStyles, padding: "0 0.95rem" }),
 };
 
 export const CreatableSelectField = ({
@@ -58,8 +62,10 @@ export const CreatableSelectField = ({
 }) => {
   const { errors, control } = useFormContext();
 
+  const fieldError = useMemo(() => pathFromString(name, errors), [name, errors]);
+
   return (
-    <FormControl isInvalid={errors[name]} {...containerProps}>
+    <FormControl isInvalid={fieldError} {...containerProps}>
       {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
       <InputGroup>
         <Controller
@@ -68,6 +74,7 @@ export const CreatableSelectField = ({
           menuPosition="fixed"
           formatCreateLabel={createMessage}
           noOptionsMessage={noOptionsMessage}
+          loadingMessage={loadingMessage}
           options={options}
           control={control}
           styles={styles}
@@ -76,9 +83,9 @@ export const CreatableSelectField = ({
           {...props}
         />
       </InputGroup>
-      {helperText && !errors[name] && <FormHelperText>{helperText}</FormHelperText>}
+      {helperText && !fieldError && <FormHelperText>{helperText}</FormHelperText>}
       <FormErrorMessage>
-        {errors[name] && errors[name].message}
+        {fieldError && fieldError.message}
       </FormErrorMessage>
     </FormControl>
   );
