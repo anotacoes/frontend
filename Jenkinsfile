@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Install dependencies') {
             steps {
-                bat 'npm install --legacy-peer-deps'
+                bat 'npm install'
             }
         }
         stage('Test') {
